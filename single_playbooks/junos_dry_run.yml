@@ -1,0 +1,13 @@
+---
+- include: build_junos.yml
+- name: Apply generated configurations
+  hosts: junos
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: printing result
+      shell: echo done!
+      register: result
+
+    - name: show result
+      debug: var=result.stdout

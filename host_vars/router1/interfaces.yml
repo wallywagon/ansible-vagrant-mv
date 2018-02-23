@@ -1,0 +1,24 @@
+interfaces:
+  physicalSingle:
+    - name: ge-0/0/0
+      description: connect.home
+      subinterface:
+        - unit: 0
+          family:
+            - inet: 10.255.0.1/16
+    - name: ge-0/0/1
+      description: connect.spine1
+      subinterface:
+        - unit: 0
+          family:
+            - inet: 10.100.1.1/24
+    - name: ge-0/0/2
+      description: connect.spine2
+      subinterface:
+        - unit: 0
+          family:
+            - inet: 10.100.2.1/24
+  loopback:
+    - unit: 0
+      family:
+        - inet: 172.20.12.100/32

@@ -1,0 +1,5 @@
+---
+- name: building junos_protocols configuration
+  template: >
+    src=protocols.j2
+    dest={{ build_directory }}/07protocols.conf.part

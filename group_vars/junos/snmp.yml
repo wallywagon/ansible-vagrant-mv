@@ -1,0 +1,24 @@
+snmp:
+  name: router1
+  location: home
+  contact: packetferret
+  community:
+    - string: 'snmpString01'
+      authorization: read-write
+      clients:
+        - 10.0.0.0/16
+  trapOptions:
+    - source-address 10.0.0.100
+  trapGroup:
+    - name: TRAP-QUEEN
+      version: v2
+      port: 162
+      categories:
+        - chassis
+        - routing
+        - authentication
+        - link
+        - startup
+        - services
+      targets:
+        - 10.0.5.1

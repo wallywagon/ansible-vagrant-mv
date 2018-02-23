@@ -1,0 +1,10 @@
+---
+- name: '### PROVISION THE PHYSICAL INTERFACES ON SPINE LAYER ###'
+  hosts: spine
+  connection: local
+  gather_facts: false
+  tasks:
+    - eos_config:
+        lines: hostname {{ inventory_hostname }}
+        authorize: true
+        provider: '{{ eos_connection }}'

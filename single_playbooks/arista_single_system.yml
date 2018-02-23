@@ -1,0 +1,25 @@
+---
+- name: '### PROVISION THE PHYSICAL INTERFACES ON SPINE LAYER ###'
+  hosts: spine
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: "configure hostname and arista_domain-name"
+      eos_system:
+        hostname: "{{ inventory_hostname }}"
+        domain_name: example.com
+        provider: '{{ eos_connection }}'
+
+    - name: "configure DNS lookup sources with VRF support"
+      eos_system:
+        lookup_source:
+          - interface: Management1
+            vrf: mgmt
+        provider: '{{ eos_connection }}'
+
+    - name: "configure name servers with VRF support"
+      eos_system:
+        name_servers:
+          - { server: 8.8.8.8, vrf: mgmt }
+          - { server: 8.8.4.4, vrf: mgmt }
+        provider: '{{ eos_connection }}'

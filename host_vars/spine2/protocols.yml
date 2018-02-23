@@ -1,0 +1,116 @@
+protocols:
+  lldp:
+    options:
+      - port-id-subtype interface-name
+    interface:
+      - all
+  ospf:
+    router_id: 2.2.2.2
+    redistribute:
+      - protocol: bgp
+        route_map: IMPORT-INTO-OSPF
+    area:
+      - area: 0.0.0.0
+        network:
+          - '10.2.0.0/16'
+          - '172.20.12.0/24'
+        interface:
+          - iface: swp1
+            type: p2p
+          - iface: swp2
+            type: p2p
+          - iface: swp3
+            type: p2p
+          - iface: swp4
+            type: p2p
+          - iface: swp5
+            type: p2p
+          - iface: swp6
+            type: p2p
+          - iface: swp7
+            type: p2p
+          - iface: swp8
+            type: p2p
+    export: REDISTRIBUTE-LOOPBACK
+  bgp:
+    group:
+      - name: router
+        peer_as: 65537
+        type: external
+        description: router1
+        neighbor:
+          - ip_address: 10.100.2.1
+            address_family: ipv4 unicast
+            soft_reconfiguration: True
+            default_originate: True
+        redistribute:
+          - source: connected
+            route_map: REDISTRIBUTE-LOOPBACK
+          - source: ospf
+            route_map: IMPORT-INTO-BGP
+        export: ADVERTISE-TO-ROUTER1
+#      SAVING THESE GOODIES FOR AN ALL-BGP FABRIC
+#      - name: leaf1
+#        peer_as: 6553611
+#        type: external
+#        description: leaf1
+#        neighbor:
+#          - ip_address: 10.2.11.11
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf2
+#        peer_as: 6553612
+#        type: external
+#        description: leaf2
+#        neighbor:
+#          - ip_address: 10.2.12.12
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf3
+#        peer_as: 6553613
+#        type: external
+#        description: leaf3
+#        neighbor:
+#          - ip_address: 10.2.13.13
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf4
+#        peer_as: 6553614
+#        type: external
+#        description: leaf4
+#        neighbor:
+#          - ip_address: 10.2.14.14
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf5
+#        peer_as: 6553615
+#        type: external
+#        description: leaf5
+#        neighbor:
+#          - ip_address: 10.2.15.15
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf6
+#        peer_as: 6553616
+#        type: external
+#        description: leaf6
+#        neighbor:
+#          - ip_address: 10.2.16.16
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf7
+#        peer_as: 6553617
+#        type: external
+#        description: leaf7
+#        neighbor:
+#          - ip_address: 10.2.17.17
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK
+#      - name: leaf8
+#        peer_as: 6553618
+#        type: external
+#        description: leaf8
+#        neighbor:
+#          - ip_address: 10.2.18.18
+#            address_family: ipv4 unicast
+#        export: REDISTRIBUTE-LOOPBACK

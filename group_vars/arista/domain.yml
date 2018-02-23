@@ -1,0 +1,6 @@
+domain:
+  source_interface: Management1
+  ns1: 8.8.8.8
+  ns2: 8.8.4.4
+  ns3: 4.2.2.2
+  domain_name: example.com

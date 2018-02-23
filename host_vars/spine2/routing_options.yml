@@ -1,0 +1,58 @@
+routing_options:
+  nonstop_routing: False
+  router_id: 172.20.12.102
+  autonomous_system: '6553602'
+  prefix_lists:
+    - name: ANY
+      sequence:
+        - number: 10
+          match: any
+          action: permit
+          ip_version: ipv4
+    - name: ADVERTISE-TO-ROUTER1
+      sequence:
+        - number: 10
+          match: any
+          action: permit
+          ip_version: ipv4
+  route_maps:
+    - name: REDISTRIBUTE-LOOPBACK
+      sequence:
+        - number: 10
+          match: interface lo
+          action: permit
+        - number: 20
+          match: ip address prefix-list ANY
+          action: deny
+    - name: REDISTRIBUTE-CONNECTED
+      sequence:
+        - number: 10
+          match: source-protocol connected
+          action: permit
+    - name: IMPORT-INTO-BGP
+      sequence:
+        - number: 10
+          match: source-protocol connected
+          action: permit
+        - number: 20
+          match: source-protocol ospf
+          action: permit
+        - number: 30
+          match: ip address prefix-list ANY
+          action: deny
+    - name: IMPORT-INTO-OSPF
+      sequence:
+        - number: 10
+          match: source-protocol bgp
+          action: permit
+        - number: 20
+          match: ip address prefix-list ANY
+          action: deny
+    - name: ADVERTISE-TO-ROUTER1
+      sequence:
+        - number: 10
+          match: ip address prefix-list ADVERTISE-TO-ROUTER1
+          action: permit
+        - number: 20
+          match: ip address prefix-list ANY
+          action: deny

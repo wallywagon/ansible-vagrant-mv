@@ -1,0 +1,11 @@
+---
+- name: "### PROVISION HOSTNAME ###"
+  hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: "grab facts"
+      eos_facts:
+        gather_subset: all
+        authorize: true
+        provider: '{{ eos_connection }}'

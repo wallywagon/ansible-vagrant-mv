@@ -1,0 +1,5 @@
+---
+- name: build arista_bgp
+  template: >
+    src=ospf.j2
+    dest={{ build_directory }}/ospf

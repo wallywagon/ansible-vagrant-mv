@@ -1,0 +1,20 @@
+# this block is used to build the device's protocol configuration
+# exclusively referenced within the roles/protocol/templates/protocol.j2 template
+
+protocols: # Routing protocol configuration
+  lldp: # Link Layer Detection Protocol
+    options: # lldp options
+      - port-id-subtype interface-name
+    interface: # lldp interfaces
+      - all
+  ospf: # OSPF configuration
+    area: # Configure an OSPF area
+      - area: 0.0.0.0 # Area ID
+        interface: # Include an interface in this area
+          - iface: ge-0/0/0.0 # Interface name
+            type: p2p # Type of interface
+          - iface: ge-0/0/1.0 # Interface name
+            type: p2p # Type of interface
+          - iface: ge-0/0/2.0 # Interface name
+            type: p2p # Type of interface
+    export: REDISTRIBUTE-DIRECT # Export policy

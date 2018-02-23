@@ -1,0 +1,61 @@
+system:
+  domain_name: eve-ng.com
+  domain_search: eve-ng.com
+  time_zone: America/Chicago
+  arp_aging_timer: 5
+  auth_order: 'password'
+  root_encrypted_password: '$6$q/WOUD8D$PZwR60hDGpTMuuwLrlfU1viyu5utnBl97VBfdpWYIfc5QwpNmHpljDbWlIFP4T70kXsVOPAzts9VLy53.biSw.'
+  name_server:
+    - 8.8.8.8
+    - 8.8.4.4
+  login:
+    message: '\n__ This is a login banner __\n'
+    class:
+      - name: SUPER_USER
+        idleTimeout: 5
+        permissions: all
+    user:
+      - name: ansible
+        uid: 2000
+        encryptPass: '$5$W9klZ.yt$L19UjdXNi3dRJbTUtCM99qSf2BIOcQzplAnFY6YNWkA'
+        permissions: super-user
+  passwordRequirements: minimum-length 8
+  services:
+    ftp: True
+    ssh:
+      - max-sessions-per-connection 4
+    netconf: True
+    rest:
+      http:
+        port: 8080
+      options:
+        - enable-explorer
+    web_management:
+      http:
+        interface: '[ ge-0/0/0.0 ge-0/0/1.0 ]'
+  syslog:
+    archiveConfig: archive size 10m files 10
+    user:
+      - name: '*'
+        facility: any
+        severity: emergency
+    host:
+      - ipAddress: 10.0.5.1
+        facility: any
+        severity: any
+        srcAddress: 10.0.0.100
+    file:
+      - fileName: messages
+        facility: any
+        severity: notice
+        authorization: info
+        priority: explicit-priority
+      - fileName: default-log-messages
+        facility: any
+        severity: info
+        options:
+          - structured-data
+          - match "(requested 'commit' operation)|(copying configuration to juniper.save)|(commit complete)|ifAdminStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|transitioned|Transferred|transfer-file|(license add)|(license delete)|(package -X update)|(package -X delete)|(FRU Online)|(FRU Offline)|(plugged in)|(unplugged)|GRES"
+  ntp:
+    server:
+      - ipAddress: 10.0.5.1

@@ -1,0 +1,112 @@
+{# PROTOCOLS #}
+{% if protocols is defined %}
+protocols {
+{% if protocols.lldp is defined %}
+    lldp {
+{% if protocols.lldp.options is defined %}
+{% for option in protocols.lldp.options %}
+        {{ option }};
+{% endfor %}
+{% endif %}
+{% if protocols.lldp.interface is defined %}
+{% for interface in protocols.lldp.interface %}
+        interface {{ interface }};
+{% endfor %}
+{% endif %}
+    }
+{% endif %}
+{% if protocols.stp is defined %}
+{% for protocol in protocols.stp %}
+    {{ protocol.type }} {
+{% for iface in protocol.interface %}
+        interface {{ iface.name }} {
+            {{ iface.mode }};
+        }
+{% endfor %}
+    }
+{% endfor %}
+{% endif %}
+{% if protocols.ospf is defined %}
+    ospf {
+{% if protocols.ospf.options is defined %}
+{% for option in protocols.ospf.options %}
+        {{ option }};
+{% endfor %}
+{% endif %}
+{% if protocols.ospf.export is defined %}
+        export {{ protocols.ospf.export }};
+{% endif %}
+{% for area in protocols.ospf.area %}
+        area {{ area.area }} {
+{% for interface in area.interface %}
+{% if interface.type is defined %}
+            interface {{ interface.iface }} {
+                interface-type {{ interface.type }};
+            }
+{% else %}
+            interface {{ interface.iface }};
+{% endif %}
+{% endfor %}
+        }
+{% endfor %}
+    }
+{% endif %}
+{# _BGP CONFIGURATION_ #}
+{% if protocols.bgp is defined %}
+    bgp {
+{% if protocols.bgp.group is defined %}
+{% for group in protocols.bgp.group %}
+        group {{ group.name }} {
+            type {{ group.type }};
+            peer-as {{ group.peer_as }};
+{% if group.export is defined %}
+            export {{ group.export }};
+{% endif %}
+{% for neighbor in group.neighbor %}
+{% if neighbor.peer_as is defined %}
+            neighbor {{ neighbor.ip_address }} peer-as {{ neighbor.peer_as }};
+{% else %}
+            neighbor {{ neighbor.ip_address }};
+{% endif %}
+{% endfor %}
+        }
+{% endfor %}
+{% endif %}
+    }
+{% endif %}
+{# _SPANNING-TREE-PROTOCOL_ #}
+{% if spanning_tree is defined %}
+{% for each in spanning_tree %}
+    {{ each.type }} {
+{% if each.type == 'mstp' %}
+        configuration-name {{ each.name }};
+        revision-level {{ each.revision }};
+        bridge-priority {{ each.priority }};
+        max-age {{ each.age }};
+        max-age {{ each.hops }};
+        hello-time {{ each.hello }};
+{% for iface in each.interface %}
+        interface {{ iface.iface }} {
+            mode {{ iface.mode }};
+        }
+{% endfor %}
+{% for instance in each.msti %}
+        msti {{ instance.instance }} {
+{% if instance.priority is defined %}
+            bridge-priority {{ instance.priority }};
+{% endif %}
+            vlan {{ instance.vlan }};
+{% for interface in instance.interface %}
+            interface {{ interface.iface }} {
+                priority {{ interface.priority }};
+                cost {{ interface.cost }};
+            }
+{% endfor %}
+        }
+{% endfor %}
+{% endif %}
+    }
+{% endfor %}
+{% endif %}
+}
+{% endif %}

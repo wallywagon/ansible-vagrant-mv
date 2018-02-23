@@ -1,0 +1,31 @@
+---
+- template:
+    src: daemons.j2
+    dest: /etc/frr/daemons
+    owner: frr
+    group: frr
+    mode: 0644
+  become: True
+
+#    - name: 'enable BGP routing'
+#      shell: sed -i /bgp/s/no/yes/g /etc/frr/daemons
+#      become: True
+#
+#    - name: 'enable Zebra daemon'
+#      shell: sed -i /zebra/s/no/yes/g /etc/frr/daemons
+#      become: True
+
+- name: 'retrieve configuration to make sure'
+  shell: grep "\(bgp\)\|\(zebra\)" /etc/frr/daemons
+  register: validate
+
+- name: 'validate'
+  debug:
+    var: validate.stdout_lines
+
+- name: 'reload services after daemon configuration is updated'
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: frr
+  become: True

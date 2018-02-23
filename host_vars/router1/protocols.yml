@@ -1,0 +1,35 @@
+protocols:
+  lldp:
+    options:
+      - port-id-subtype interface-name
+    interface:
+      - all
+#  ospf:
+#    area:
+#      - area: 0.0.0.0
+#        interface:
+#          - iface: ge-0/0/1.0
+#            type: p2p
+#          - iface: ge-0/0/2.0
+#            type: p2p
+#    export: REDISTRIBUTE-DIRECT
+  bgp:
+    group:
+      - name: home
+        peer_as: 1.0
+        type: external
+        neighbor:
+          - ip_address: 10.0.0.1
+        export: ADVERTISE-TO-FIREWALL
+      - name: spine1
+        peer_as: 100.1
+        type: external
+        neighbor:
+          - ip_address: 10.100.1.2
+        export: ADVERTISE-TO-SPINE
+      - name: spine2
+        peer_as: 100.2
+        type: external
+        neighbor:
+          - ip_address: 10.100.2.2
+        export: ADVERTISE-TO-SPINE

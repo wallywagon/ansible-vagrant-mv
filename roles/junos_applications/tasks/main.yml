@@ -1,0 +1,5 @@
+---
+- name: building junos_applications configuration
+  template: >
+    src=applications.j2
+    dest={{ build_directory }}/21applications.conf.part

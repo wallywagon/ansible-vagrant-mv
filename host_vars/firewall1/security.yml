@@ -1,0 +1,188 @@
+# this block is used to build the device's firewall configuration.
+# this is what separates the boys from men
+# exclusively referenced within the roles/security/templates/security.j2 template
+
+security: # Security configuration
+  log: # Configure security log
+    mode: stream # Controls how security logs are processed and exported
+    format: sd-syslog # Set security log format for the device
+    source_address: 192.168.0.1 # Source ip address used when exporting security logs
+    stream: # Set security log stream settings
+      name: SYSLOG-SERVER # name of security log stream
+      host: 192.168.5.1 # Destination to send security logs to
+      port: 514 # Host port number
+  certificates: # X.509 certificate configuration
+    local: # Local X.509 certificate configuration
+      - cert_name: RESTAPI # Simple name to identify this certificate
+        payload: '-----BEGIN PRIVATE KEY-----\nPAYLOAD==\n-----END CERTIFICATE-----\n' # Certificate and private key string
+  screen: # Configure screen feature
+    name: untrust-screen # Screen object name
+    icmp: # Configure ICMP ids options
+      - ping-death # Enable ping of death ids option
+    ip: # Configure IP layer ids options
+      - source-route-option # Enable ip source route ids option
+      - tear-drop # Enable tear drop ids option
+    tcp: # Configure TCP Layer ids options
+      - name: syn-flood # Configure SYN flood ids option
+        options:
+          - alarm-threshold 1024 # Alarm threshold (1..100000 requests per second)
+          - attack-threshold 200 # Attack threshold (1..100000 proxied requests per second)
+          - source-threshold 1024 # Source threshold (4..100000 SYN pps)
+          - destination-threshold 2048 # Destination threshold (4..100000 SYN pps)
+          - timeout 20 # SYN flood ager timeout (1..50 seconds)
+      - name: land # Enable land attack ids option
+  nat: # Configure Network Address Translation
+    source: # Configure Source NAT
+      - rule_name: trust-to-untrust # Rule-set name
+        from_zone: trust # Where is the traffic from
+        to_zone: untrust # Where is the traffic to
+        nat_rule: # Source NAT rule
+          - name: source-nat-rule # Source NAT Rule name
+            match: # Specify Source NAT rule match criteria
+              - source-address 192.168.0.0/16
+              - destination-address 0.0.0.0/0
+            then: # Then action
+              - nat_type: source-nat
+                options:
+                  - interface # Use egress interface address
+    destination: # Configure Destination NAT
+      pool: # Define a destination address pool
+        - pool_name: host1_rdp # Pool name
+          address: 192.168.100.17/32 # Add address or address range to pool
+          port: 3389 # Specify the port value
+        - pool_name: host2_ssh # Pool name
+          address: 192.168.255.21/32 # Add address or address range to pool
+          port: 22 # Specify the port value
+        - pool_name: host3_ssh # Pool name
+          address: 192.168.255.30/32 # Add address or address range to pool
+          port: 22 # Specify the port value
+      rule_set: # Configurate a set of rules
+        name: OUTSIDE-INSIDE # Rule-set name
+        from_zone: untrust # Where is the traffic from
+        nat_rule: # Destination NAT rule
+          - name: host1_rdp # Rule name
+            match: # Specify Destination NAT rule match criteria
+              destination_address: 0.0.0.0/0 # Destination address
+              destination_port: 19222 # Destination port
+            then: # Then action
+              nat_type: pool # Use Destination NAT pool
+              pool_name: host1_rdp # Name of Destination NAT pool
+          - name: host2_ssh # Rule name
+            match: # Specify Destination NAT rule match criteria
+              destination_address: 0.0.0.0/0 # Destination address
+              destination_port: 19223 # Destination port
+            then: # Then action
+              nat_type: pool # Use Destination NAT pool
+              pool_name: host2_ssh # Rule name
+          - name: host3_ssh # Rule name
+            match: # Specify Destination NAT rule match criteria
+              destination_address: 0.0.0.0/0 # Destination address
+              destination_port: 19224 # Destination port
+            then: # Then action
+              nat_type: pool # Use Destination NAT pool
+              pool_name: host3_ssh # Rule name
+  policies: # Configure Network Security Policies
+    - from_zone: trust # Define a policy context from this zone
+      to_zone: trust # Destination zone
+      policy_name:
+        - name: INTRA-ZONE-TRAFFIC # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: any # Match source address
+            destination_address: any # Match destination address
+            application: any # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+    - from_zone: trust # Define a policy context from this zone
+      to_zone: untrust # Destination zone
+      policy_name:
+        - name: trust-to-untrust # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: any # Match source address
+            destination_address: any # Match destination address
+            application: any # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+    - from_zone: untrust # Define a policy context from this zone
+      to_zone: trust # Destination zone
+      policy_name:
+        - name: SSH # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: '[ jump_server ]' # Match source address
+            destination_address: '[ host3 host2 ]' # Match destination address
+            application: junos-ssh # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+        - name: host1_rdp # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: any # Match source address
+            destination_address: '[ host1 ]' # Match destination address
+            application: msft_rdp # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit
+            - count
+        - name: HTTP # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: any # Match source address
+            destination_address: '[ host3 ]' # Match destination address
+            application: junos-http # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+        - name: HTTPS # Security policy name
+          match: # Specify security policy match-criteria
+            source_address: any # Match source address
+            destination_address: '[ host3 ]' # Match destination address
+            application: junos-https # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+    - from_zone: untrust # Define a policy context from this zone
+      to_zone: junos-host # Destination zone
+      policy_name:
+        - name: juniper_srx_300-MGMT # Security policy name
+          match:
+            source_address: '[ jump_server ]' # Match source address
+            destination_address: any  # Match destination address
+            application: any # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+        - name: DENY-ALL # Define a policy context from this zone
+          match:
+            source_address: any # Match source address
+            destination_address: any # Match destination address
+            application: any # Port-based application
+          then: # Specify policy action to take when packet match criteria
+            - permit # Permit packets
+            - count # Enable count
+  zones: # Zone configuration
+    security_zone: # Security zones
+      - name: trust # Name of the zone
+        address_book: # Address book entries
+          - hostname: host1 # Security address name
+            address: 192.168.100.17/32 # Numeric IPv4 or IPv6 address with prefix
+          - hostname: host2 # Security address name
+            address: 192.168.255.21/32 # Numeric IPv4 or IPv6 address with prefix
+          - hostname: host3 # Security address name
+            address: 192.168.255.30/32 # Numeric IPv4 or IPv6 address with prefix
+        host_inbound_traffic: # Allowed system services & protocols
+          system_services: # Type of incoming system-service traffic to accept
+            - all
+          protocols: # Protocol type of incoming traffic to accept
+            - all
+        interfaces: # Interfaces that are part of this zone
+          - ge-0/0/1.0
+      - name: untrust # Name of the zone
+        address_book: # Address book entries
+          - hostname: jump_server # Security address name
+            address: 74.51.181.95/32 # Numeric IPv4 or IPv6 address with prefix
+            description: external jump server # Text description of address
+        screen: untrust-screen # Name of ids option object applied to the zone
+        host_inbound_traffic: # # Allowed system services & protocols
+          system_services: # # Protocol type of incoming traffic to accept
+            - ssh
+            - dhcp
+        interfaces: # Interfaces that are part of this zone
+          - ge-0/0/0.0

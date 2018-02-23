@@ -1,0 +1,9 @@
+eos_connection:
+  host: "{{ ansible_host }}"
+  username: arista
+  password: arista!
+  transport: cli
+  use_ssl: false
+  authorize: true
+  validate_certs: False
+

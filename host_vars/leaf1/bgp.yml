@@ -1,0 +1,19 @@
+bgp:
+  autonomous_system: 100.65011
+  router_id: 192.168.255.11
+  maximum_paths: 4
+  neighbor:
+    - description: spine1
+      ip_address: 10.1.11.1
+      autonomous_system: 100.65001
+      activate: True
+      default_originate: False
+      policy_in: BGP_PERMIT_ALL_IN
+      policy_out: BGP_PERMIT_ALL_OUT
+    - description: spine2
+      ip_address: 10.2.11.2
+      autonomous_system: 100.65002
+      activate: True
+      default_originate: False
+      policy_in: BGP_PERMIT_ALL_IN
+      policy_out: BGP_PERMIT_ALL_OUT

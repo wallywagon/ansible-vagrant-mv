@@ -1,0 +1,4 @@
+---
+- include: router.yml
+- include: spine.yml
+- include: leaf.yml

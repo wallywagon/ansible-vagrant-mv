@@ -1,0 +1,6 @@
+# this block is used to build the device's routing_options configuration
+# exclusively referenced within the roles/routing_options/templates/routing_options.j2 template
+
+routing_options: # Protocol-independent routing option configuration
+  nonstop_routing: False
+  router_id: 172.20.12.1 # Router identifier

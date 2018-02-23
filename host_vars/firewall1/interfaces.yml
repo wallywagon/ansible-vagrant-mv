@@ -1,0 +1,52 @@
+# this block is used to build the device's interface configuration
+# exclusively referenced within the roles/interfaces/templates/interfaces.j2 template
+
+interfaces: # Interface configuration
+  physicalSingle: # unbonded interface configuration
+    - name: ge-0/0/0 # physical interface
+      description: INTERNET # description
+      subinterface: # Logical interface
+        - unit: 0 # Logical interface number
+          family: # Protocol family
+            - inet: dhcp-client # IPv4 parameters
+    - name: ge-0/0/1 # physical interface
+      description: DATACENTER # description
+      subinterface: # Logical interface
+        - unit: 0 # Logical interface number
+          family: # Protocol family
+            - inet: 10.255.0.2/24 # IPv4 parameters
+    - name: ge-0/0/2 # physical interface
+      description: DMZ1 # description
+      subinterface: # Logical interface
+        - unit: 0 # Logical interface number
+          family: # Protocol family
+            - inet: 172.16.1.1/24 # IPv4 parameters
+#    - name: ge-0/0/3 # physical interface
+#      description: LAN3 # description
+#      subinterface: # Logical interface
+#        - unit: 0 # Logical interface number
+#          family: # Protocol family
+#            - inet: 172.16.3.1/16 # IPv4 parameters
+#    - name: ge-0/0/4 # physical interface
+#      description: DMZ1 # description
+#      subinterface: # Logical interface
+#        - unit: 0 # Logical interface number
+#          family: # Protocol family
+#            - inet: 172.16.4.1/16 # IPv4 parameters
+#    - name: ge-0/0/5 # physical interface
+#      description: DMZ2 # description
+#      subinterface: # Logical interface
+#        - unit: 0 # Logical interface number
+#          family: # Protocol family
+#            - inet: 172.16.5.1/24 # IPv4 parameters
+#    - name: ge-0/0/6 # physical interface
+#      description: S2SVPN1 # description
+#      subinterface: # Logical interface
+#        - unit: 0 # Logical interface number
+#          family: # Protocol family
+#            - inet: 100.0.0.1/30 # IPv4 parameters
+  loopback: # loopback interfaces
+    - unit: 0 # Logical interface number
+      family: # Protocol family
+        - inet: 172.20.12.12/32 # IPv4 parameters
+        - iso: 49.5100.0101.1620.0001.00 # ISO parameters

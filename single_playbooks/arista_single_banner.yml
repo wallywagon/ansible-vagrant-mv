@@ -1,0 +1,16 @@
+---
+- name: '### PROVISION MOTD BANNER ###'
+  hosts: all
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: "configure the login banner"
+      eos_banner:
+        banner: login
+        text: |
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+          %%    welcome to our lab environment, powered by EVE-NG.    %%
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        state: present
+        authorize: true
+        provider: '{{ eos_connection }}'

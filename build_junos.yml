@@ -1,0 +1,21 @@
+---
+  - include: build_directories.yml
+  - name: create configuraitons for firewalls
+    hosts: junos
+    connection: local
+    gather_facts: no
+    roles:
+      - junos_system
+      - junos_chassis
+      - junos_security
+      - junos_interfaces
+      - junos_snmp
+      - junos_forwarding_options
+      - junos_routing_options
+      - junos_protocols
+      - junos_policy_options
+      - junos_virtual_chassis
+      - junos_vlans
+      - junos_applications
+      - junos_access
+      - junos_build_config

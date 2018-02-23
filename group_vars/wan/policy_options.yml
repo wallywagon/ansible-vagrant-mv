@@ -1,0 +1,34 @@
+policy_options:
+  policy:
+    - name: REDISTRIBUTE-DIRECT
+      term:
+        - number: 10
+          from:
+            - protocol direct
+          then: accept
+    - name: REDISTRIBUTE-STATIC
+      term:
+        - number: 10
+          from:
+            - protocol static
+          then: accept
+    - name: ADVERTISE-TO-SPINE
+      term:
+        - number: 10
+          from:
+            - protocol direct
+          then: accept
+        - number: 20
+          from:
+            - protocol static
+          then: accept
+    - name: ADVERTISE-TO-FIREWALL
+      term:
+        - number: 10
+          from:
+            - protocol direct
+          then: accept
+        - number: 20
+          from:
+            - protocol bgp
+          then: accept

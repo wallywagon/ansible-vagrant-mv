@@ -1,0 +1,29 @@
+{# ROUTING OPTIONS #}
+{% if routing_options is defined %}
+routing-options {
+{% if routing_options.nonstop_routing == True %}
+    nonstop-routing;
+{% endif %}
+{% if routing_options.router_id is defined %}
+    router-id {{ routing_options.router_id }};
+{% endif %}
+{% if routing_options.autonomous_system is defined %}
+    autonomous-system {{ routing_options.autonomous_system }};
+{% endif %}
+{% if routing_options.static_routes is defined %}
+    static {
+{% for route in routing_options.static_routes %}
+        route {{ route.destination_prefix }}
+            next-hop {{ route.next_hop }};
+{% endfor %}
+    }
+{% endif %}
+{% if routing_options.forwardingTable is defined %}
+    forwarding-table {
+{% for policy in routing_options.forwardingTable %}
+        export {{ policy }};
+{% endfor %}
+    }
+{% endif %}
+{% endif %}
+}

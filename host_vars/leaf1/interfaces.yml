@@ -1,0 +1,18 @@
+interfaces:
+  - name: Ethernet1
+    mtu: 9000
+    ipv4_address: 10.1.11.11/24
+    mode: l3_ipv4
+    ospf:
+      area: 0.0.0.0
+      network: point-to-point
+  - name: Ethernet2
+    mtu: 9000
+    ipv4_address: 10.2.11.11/24
+    mode: l3_ipv4
+    ospf:
+      area: 0.0.0.0
+      network: point-to-point
+  - name: lo0
+    ipv4_address: 172.20.12.111/32
+    mode: loopback

@@ -1,0 +1,83 @@
+# This file tells the frr package which daemons to start.
+#
+# Entries are in the format: <daemon>=(yes|no|priority)
+#   0, "no"  = disabled
+#   1, "yes" = highest priority
+#   2 .. 10  = lower priorities
+# Read /usr/share/doc/frr/README.Debian for details.
+#
+# Sample configurations for these daemons can be found in
+# /usr/share/doc/frr/examples/.
+#
+# ATTENTION:
+#
+# When activation a daemon at the first time, a config file, even if it is
+# empty, has to be present *and* be owned by the user and group "frr", else
+# the daemon will not be started by /etc/init.d/frr. The permissions should
+# be u=rw,g=r,o=.
+# When using "vtysh" such a config file is also needed. It should be owned by
+# group "frr vty" and set to ug=rw,o= though. Check /etc/pam.d/frr, too.
+#
+# The watchfrr daemon is always started. Per default in monitoring-only but
+# that can be changed via /etc/frr/daemons.conf.
+#
+{% if frr.zebra == 'yes' %}
+zebra=yes
+{% else %}
+zebra=no
+{% endif %}
+{% if frr.bgpd == 'yes' %}
+bgpd=yes
+{% else %}
+bgpd=no
+{% endif %}
+{% if frr.ospfd == 'yes' %}
+ospfd=yes
+{% else %}
+ospfd=no
+{% endif %}
+{% if frr.ospf6d == 'yes' %}
+ospf6d=yes
+{% else %}
+ospf6d=no
+{% endif %}
+{% if frr.ripd == 'yes' %}
+ripd=yes
+{% else %}
+ripd=no
+{% endif %}
+{% if frr.ripngd == 'yes' %}
+ripngd=yes
+{% else %}
+ripngd=no
+{% endif %}
+{% if frr.isisd == 'yes' %}
+isisd=yes
+{% else %}
+isisd=no
+{% endif %}
+{% if frr.pimd == 'yes' %}
+pimd=yes
+{% else %}
+pimd=no
+{% endif %}
+{% if frr.ldpd == 'yes' %}
+ldpd=yes
+{% else %}
+ldpd=no
+{% endif %}
+{% if frr.nhrpd == 'yes' %}
+nhrpd=yes
+{% else %}
+nhrpd=no
+{% endif %}
+{% if frr.eigrpd == 'yes' %}
+eigrpd=yes
+{% else %}
+eigrpd=no
+{% endif %}
+{% if frr.babeld == 'yes' %}
+babeld=yes
+{% else %}
+babeld=no
+{% endif %}

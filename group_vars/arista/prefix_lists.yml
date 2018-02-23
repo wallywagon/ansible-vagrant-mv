@@ -1,0 +1,11 @@
+prefix_lists:
+  - name: DEFAULT_ROUTE
+    lines:
+      - sequence: 10
+        action: permit
+        match: 0.0.0.0/0
+  - name: ANY
+    lines:
+      - sequence: 10
+        action: permit
+        match: 0.0.0.0/0 ge 32

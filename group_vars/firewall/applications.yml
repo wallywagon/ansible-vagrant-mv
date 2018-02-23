@@ -1,0 +1,15 @@
+# this block is used to build the device's applications configuration
+# exclusively referenced within the roles/applications/templates/applications.j2 template
+
+# use this when Juniper's extensive list of applications just doesn't fit your needs.
+# these will be used within the part of the configuration managing external requests inbound to a protected resource
+applications:
+  - name: msft_rdp # name of custom application
+    protocol: tcp # protocol (udp or tcp)
+    destination_port: 3389 # port number
+  - name: grafana # name of custom application
+    protocol: tcp # protocol (udp or tcp)
+    destination_port: 3000 # port number
+  - name: openvpn # name of custom application
+    protocol: udp # protocol (udp or tcp)
+    destination_port: 1194 # protocol (udp or tcp)

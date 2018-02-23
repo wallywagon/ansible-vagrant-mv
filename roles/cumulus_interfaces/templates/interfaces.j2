@@ -1,0 +1,50 @@
+source /etc/network/interfaces.d/*.intf
+
+{% if interfaces is defined %}
+{% for iface in interfaces %}
+
+# {{ iface.description }}
+auto {{ iface.name }}
+{# LOOPBACK INTERFACE CONFIGURATION #}
+{% if iface.loopback is defined %}
+iface {{ iface.name }} inet loopback
+{% if iface.ipv4.address is defined %}
+{% for address in iface.ipv4.address %}
+  address {{ address }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{# SWP INTERFACES #}
+{% if iface.ipv4 is defined and iface.loopback is not defined %}
+{% if iface.ipv4.address == 'dhcp' %}
+iface {{ iface.name }} inet {{ iface.ipv4.address }}
+  alias {{ iface.alias }}
+{% if iface.hwaddress is defined %}
+  hwaddress ether {{ iface.hwaddress }}
+{% endif %}
+  mtu {{ iface.mtu }}
+{% else %}
+iface {{ iface.name }} inet static
+  address {{ iface.ipv4.address }}
+  alias {{ iface.alias }}
+{% if iface.hwaddress is defined %}
+  hwaddress ether {{ iface.hwaddress }}
+{% endif %}
+  mtu {{ iface.mtu }}
+  netmask {{ iface.ipv4.mask }}
+{% endif %}
+{% endif %}
+{#{% if iface.loopback is not defined %}#}
+{#{% if iface.negotiation is defined %}#}
+{#  link-autoneg {{ iface.negotiation }}#}
+{#{% else %}#}
+{#  link-autoneg on#}
+{#{% endif %}#}
+{#{% if iface.speed is defined %}#}
+{#  link-speed {{ iface.speed }}#}
+{#{% else %}#}
+{#  link-speed 1000#}
+{#{% endif %}#}
+{#{% endif %}#}
+{% endfor %}
+{% endif %}

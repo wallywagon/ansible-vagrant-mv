@@ -1,0 +1,70 @@
+---
+- name: 'provision FRR'
+  template:
+    src: frr_conf.j2
+    dest: /etc/frr/frr.conf
+    owner: frr
+    group: frr
+    mode: 0640
+  become: True
+
+- name: 'restart frr service'
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: frr
+  become: True
+
+#    - name: 'build prefix-lists'
+#      nclu:
+#        template: |
+#          {% for prefix_list in routing_options.prefix_lists %}
+#          {% for sequence in prefix_list.sequence %}
+#          add routing prefix-list {{ sequence.ip_version }} {{ prefix_list.name }} {{ sequence.action }} {{ sequence.match }}
+#          {% endfor %}
+#          {% endfor %}
+#        commit: true
+#        description: 'Ansible - building prefix lists'
+#    - name: 'build route-maps'
+#      nclu:
+#        template: |
+#          {% for route_map in routing_options.route_maps %}
+#          {% for sequence in route_map.sequence %}
+#          add routing route-map {{ route_map.name }} {{ sequence.action }} {{ sequence.number }} match {{ sequence.match }}
+#          {% endfor %}
+#          {% endfor %}
+#        commit: true
+#        description: 'Ansible - building route-maps'
+#    - name: 'provision BGP autonomous number'
+#      nclu:
+#        commands:
+#            - add bgp autonomous-system "{{ routing_options.autonomous_system }}"
+#        commit: true
+#        description: "Ansible - provision BGP AS number"
+#
+#    - name: 'provision BGP router-id'
+#      nclu:
+#        commands:
+#            - add bgp router-id "{{ routing_options.router_id }}"
+#        commit: true
+#        description: "Ansible - provision BGP router-id"
+#
+#    - name: 'provision BGP neighbors'
+#      nclu:
+#        template: |
+#          {% for group in protocols.bgp.group %}
+#          {% for neighbor in group.neighbor %}
+#          add bgp neighbor {{ neighbor.ip_address }} remote-as {{ group.peer_as }}
+#          add bgp neighbor {{ neighbor.ip_address }} description {{ group.description }}
+#          add bgp ipv4 unicast neighbor {{ neighbor.ip_address }} activate
+#          {% if group.export is defined %}
+#          add bgp neighbor {{ neighbor.ip_address }} route-map {{ group.export }} out
+#          {% endif %}
+#          {% if group.import is defined %}
+#          add bgp neighbor {{ neighbor.ip_address }} route-map {{ group.import }} in
+#          {% endif %}
+#          {% endfor %}
+#          {% endfor %}
+#        commit: true
+#        description: "Ansible - provision BGP neighbors"
+

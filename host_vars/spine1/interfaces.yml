@@ -1,0 +1,89 @@
+interfaces:
+  - name: eth0
+    description: 'oob connection'
+    alias: 'connect.oob'
+    hwaddress: '50:00:00:0c:01:00'
+    mtu: 9000
+    ipv4:
+      address: '10.0.100.1'
+      mask: '255.255.0.0'
+  - name: swp1
+    description: 'connection to swp1 on leaf1'
+    alias: 'connect.leaf1'
+    hwaddress: '50:00:00:0c:01:01'
+    mtu: 9000
+    ipv4:
+      address: '10.1.11.1'
+      mask: '255.255.255.0'
+  - name: swp2
+    description: 'connection to swp1 on leaf2'
+    alias: 'connect.leaf2'
+    hwaddress: '50:00:00:0c:01:02'
+    mtu: 9000
+    ipv4:
+      address: '10.1.12.1'
+      mask: '255.255.255.0'
+  - name: swp3
+    description: 'connection to swp1 on leaf3'
+    alias: 'connect.leaf3'
+    hwaddress: '50:00:00:0c:01:03'
+    mtu: 9000
+    ipv4:
+      address: '10.1.13.1'
+      mask: '255.255.255.0'
+  - name: swp4
+    description: 'connection to swp1 on leaf4'
+    alias: 'connect.leaf4'
+    hwaddress: '50:00:00:0c:01:04'
+    mtu: 9000
+    ipv4:
+      address: '10.1.14.1'
+      mask: '255.255.255.0'
+  - name: swp5
+    description: 'connection to swp1 on leaf5'
+    alias: 'connect.leaf5'
+    hwaddress: '50:00:00:0c:01:05'
+    mtu: 9000
+    ipv4:
+      address: '10.1.15.1'
+      mask: '255.255.255.0'
+  - name: swp6
+    description: 'connection to swp1 on leaf6'
+    alias: 'connect.leaf6'
+    hwaddress: '50:00:00:0c:01:06'
+    mtu: 9000
+    ipv4:
+      address: '10.1.16.1'
+      mask: '255.255.255.0'
+  - name: swp7
+    description: 'connection to swp1 on leaf7'
+    alias: 'connect.leaf7'
+    hwaddress: '50:00:00:0c:01:07'
+    mtu: 9000
+    ipv4:
+      address: '10.1.17.1'
+      mask: '255.255.255.0'
+  - name: swp8
+    description: 'connection to swp1 on leaf8'
+    alias: 'connect.leaf8'
+    hwaddress: '50:00:00:0c:01:08'
+    mtu: 9000
+    ipv4:
+      address: '10.1.18.1'
+      mask: '255.255.255.0'
+  - name: swp9
+    description: 'connection to ge-0/0/1 on router1'
+    alias: 'connect.router1'
+    hwaddress: '50:00:00:0c:01:09'
+    mtu: 9000
+    ipv4:
+      address: '10.100.1.2'
+      mask: '255.255.255.0'
+  - name: lo
+    description: 'loopback network interface'
+    alias: 'loopback0'
+    ipv4:
+      address:
+        - '172.20.12.101/32'
+        - '1.1.1.1/32'
+    loopback: True

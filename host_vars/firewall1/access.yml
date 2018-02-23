@@ -1,0 +1,28 @@
+# this block is used to build the device's access configuration
+# exclusively referenced within the roles/access/templates/access.j2 template
+
+# much of the DHCP magic happens here
+access: # Address assignment configuration
+  pool: # DHCP Address pool
+    name: TRUSTED # Address family
+    network: 192.168.0.0/16 # Network address
+    range: # Address range
+      name: LAN # Range name
+      low: 192.168.200.0 # Lower limit of address range
+      high: 192.168.201.254 # Upper limit of address range
+    nameserver: # Domain name servers available to the client
+      - 192.168.4.1
+      - 192.168.4.2
+      - 8.8.8.8
+    router: 192.168.0.1 # Routers advertised to clients
+    domain_name: example.com
+    hosts: # Hostname for static reservations
+      - name: host1 # Hostname
+        hw: 1c:87:2c:60:fa:78 # host mac address
+        ip: 192.168.100.17 # reserved IP address
+      - name: host4 # Hostname
+        hw: 00:0f:55:a8:f2:b2 # host mac address
+        ip: 192.168.50.1 # reserved IP address
+      - name: host5 # Hostname
+        hw: 00:0f:55:a9:07:a6 # host mac address
+        ip: 192.168.50.2 # reserved IP address

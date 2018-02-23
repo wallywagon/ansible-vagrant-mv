@@ -1,0 +1,23 @@
+#junos_provider:
+#  host: "{{ ansible_host }}"
+#  username: "junos"
+#  password: "juniper!"
+#
+#cumulus_provider:
+#  host: "{{ ansible_host }}"
+#  username: "cumulus"
+#  password: "CumulusLinux!"
+#
+#arista_provider:
+#  host: "{{ ansible_host }}"
+#  username: "arista"
+#  password: "arista!"
+#
+#temporaryDirectory: '/tmp/ansible/'
+#build_directory: "{{ temporaryDirectory }}/{{ inventory_hostname }}/tmp"
+#junos_configuration_directory: config
+#junos_configuration_file: "{{ inventory_hostname }}.conf"
+#junos_configuration: "{{ junos_configuration_directory }}/{{ junos_configuration_file }}"
+#arista_config_directory: "config"
+#arista_config_file: "{{ inventory_hostname }}.conf"
+#arista_config: "{{ arista_config_directory }}/{{ arista_config_file }}"

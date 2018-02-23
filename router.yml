@@ -1,0 +1,18 @@
+---
+- include: build_junos.yml
+- name: Apply generated configurations
+  hosts: junos
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Include vault_vars variables
+      include_vars:
+        file: vault_vars.yml
+
+    - name: pushing configuration to device, please wait...
+      junos_config:
+        src: "{{ junos_configuration }}"
+        src_format: text
+        comment: "applied by ansible"
+        provider: "{{ junos_provider }}"
+      register: result

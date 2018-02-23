@@ -1,0 +1,15 @@
+---
+  - name: '### BUILD THE CONFIGURATION PIECE-BY-PIECE ###'
+    hosts: arista
+    connection: local
+    gather_facts: false
+    roles:
+      - arista_hostname
+      - arista_interfaces
+      - arista_domain
+      - arista_prefix_lists
+      - arista_route_maps
+      - arista_bgp
+      - arista_ospf
+      - arista_build_config
+

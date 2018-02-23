@@ -1,0 +1,11 @@
+# this block is used to build the device's Policy option configuration
+# exclusively referenced within the roles/policy_options/templates/policy_options.j2 template
+
+policy_options: # Policy option configuration
+  policy:
+    - name: REDISTRIBUTE-DIRECT # Name to identify a policy filter
+      term: # Policy term
+        - number: 10 # term_name
+          from: # Conditions to match the source of a route
+            - protocol direct
+          then: accept # Actions to take if 'from' and 'to' conditions match

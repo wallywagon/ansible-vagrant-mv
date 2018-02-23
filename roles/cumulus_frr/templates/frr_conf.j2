@@ -1,0 +1,93 @@
+frr version 3.1+cl3u1
+frr defaults datacenter
+username cumulus nopassword
+!
+service integrated-vtysh-config
+!
+log syslog informational
+!
+{% if protocols.ospf is defined %}
+{% for area in protocols.ospf.area %}
+{% for interface in area.interface %}
+interface {{ interface.iface }}
+{% if interface.type == 'p2p' %}
+ ip ospf network point-to-point
+{% else %}
+ ip ospf network {{ interface.type }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+!
+router bgp {{ routing_options.autonomous_system }}
+  bgp router-id {{ routing_options.router_id }}
+{% for group in protocols.bgp.group %}
+{% for neighbor in group.neighbor %}
+  neighbor {{ neighbor.ip_address }} remote-as {{ group.peer_as }}
+  neighbor {{ neighbor.ip_address }} description {{ group.description }}
+{% endfor %}
+{% endfor %}
+!
+ address-family ipv4 unicast
+{% for group in protocols.bgp.group %}
+{% for neighbor in group.neighbor %}
+{% if neighbor.address_family == 'ipv4 unicast' %}
+{% if neighbor.default_originate is defined and neighbor.default_originate == True %}
+  neighbor {{ neighbor.ip_address }} default-originate
+{% endif %}
+{% if neighbor.soft_reconfiguration is defined %}
+  neighbor {{ neighbor.ip_address }} soft-reconfiguration inbound
+{% endif %}
+{% if group.export is defined %}
+  neighbor {{ neighbor.ip_address }} route-map {{ group.export }} out
+{% endif %}
+{% if group.import is defined %}
+  neighbor {{ neighbor.ip_address }} route-map {{ group.import }} in
+{% endif %}
+{% if group.redistribute is defined %}
+{% for policy in group.redistribute %}
+  redistribute {{ policy.source }} route-map {{ policy.route_map }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+ exit-address-family
+!
+{% if protocols.ospf is defined %}
+router ospf
+ router-id {{ protocols.ospf.router_id }}
+{% if protocols.ospf.redistribute is defined %}
+{% for statement in protocols.ospf.redistribute %}
+{% if statement.route_map is defined %}
+    redistribute {{ statement.protocol }} route-map {{ statement.route_map }}
+{% else %}
+    redistribute {{ statement.protocol }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% for area in protocols.ospf.area %}
+{% for network in area.network %}
+ network {{ network }} area {{ area.area }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+!
+{% for prefix_list in routing_options.prefix_lists %}
+{% for sequence in prefix_list.sequence %}
+ip prefix-list {{ prefix_list.name }} seq {{ sequence.number }} {{ sequence.action }} {{ sequence.match }}
+{% endfor %}
+{% endfor %}
+!
+{% for route_map in routing_options.route_maps %}
+{% for sequence in route_map.sequence %}
+route-map {{ route_map.name }} {{ sequence.action }} {{ sequence.number }}
+  match {{ sequence.match }}
+{% if sequence.set is defined %}
+  set {{ sequence.set }}
+{% endif %}
+!
+{% endfor %}
+{% endfor %}
+line vty
+!

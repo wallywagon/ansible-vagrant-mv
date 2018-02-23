@@ -1,0 +1,7 @@
+routing_options:
+  nonstop_routing: False
+  router_id: 172.20.12.100
+  autonomous_system: '1.1'
+  static_routes:
+    - destination_prefix: '0.0.0.0/0'
+      next_hop: '10.255.0.2'

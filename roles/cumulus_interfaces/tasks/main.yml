@@ -1,0 +1,25 @@
+---
+- name: 'Provision Cumulus interfaces'
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+  become: True
+
+- name: 'reload services after interface configuration is updated'
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: networking
+  become: True
+
+#    - name: 'bump up MTU to 9000'
+#      nclu:
+#        template: |
+#            {% for iface in range(1,9) %}
+#            add int swp{{iface}} mtu 9000
+#            {% endfor %}
+#        commit: true
+#        description: "bump up MTU"

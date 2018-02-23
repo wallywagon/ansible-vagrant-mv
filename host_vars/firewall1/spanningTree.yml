@@ -1,0 +1,30 @@
+# this block is used to build the device's Spanning-Tree configuration
+# exclusively referenced within the roles/protocol/templates/protocol.j2 template
+
+spanning_tree:
+  - type: mstp # Multiple Spanning Tree Protocol options
+    name: datacenter # Configuration name (part of MST configuration identifier)
+    revision: 1 # Revision level (part of MST configuration identifier)
+    priority: 4k # Priority of the bridge (in increments of 4k - 0,4k,8k,..60k) (0..61440)
+    age: 30 # Maximum age of received protocol bpdu (6..40 seconds)
+    hops: 12 # Maximum number of hops (1..255)
+    hello: 2 # Time interval between configuration BPDUs (1..10 seconds)
+    interface:
+      - iface: ge-0/0/1 # interface
+        mode: point-to-point # Interface mode (P2P or shared)
+      - iface: ge-0/0/2 # interface
+        mode: point-to-point # Interface mode (P2P or shared)
+    msti: # Per-MSTI options
+      - instance: 10 # id
+        vlan: 1-4094 # VLAN ID or VLAN ID range
+        priority: 4k # Priority of the bridge (in increments of 4k - 0,4k,8k,..60k) (0..61440)
+        interface: # Interface options
+          - iface: ge-0/0/1 # interface
+            priority: 32 # Interface priority (in increments of 16 - 0,16,..240) (0..255)
+            cost: 10 # Cost of the interface (1..200000000)
+          - iface: ge-0/0/2 # interface
+            priority: 32 # Interface priority (in increments of 16 - 0,16,..240) (0..255)
+            cost: 10 # Cost of the interface (1..200000000)
+          - iface: ge-0/0/3 # interface
+            priority: 32 # Interface priority (in increments of 16 - 0,16,..240) (0..255)
+            cost: 10 # Cost of the interface (1..200000000)

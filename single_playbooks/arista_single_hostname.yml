@@ -1,0 +1,10 @@
+---
+- name: "### PROVISION HOSTNAME ###"
+  hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+    - eos_config:
+        lines: hostname {{ inventory_hostname }}
+        authorize: true
+        provider: '{{ eos_connection }}'

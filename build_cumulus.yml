@@ -1,0 +1,9 @@
+---
+  - name: 'Building components for Cumulus configuration'
+    gather_facts: False
+    hosts: cumulus
+    roles:
+      - cumulus_daemons
+      - cumulus_interfaces
+      - cumulus_system
+      - cumulus_frr

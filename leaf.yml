@@ -1,0 +1,16 @@
+---
+  - include: build_arista.yml
+  - name: '### APPLY CONFIGURATION ###'
+    hosts: leaf
+    connection: local
+    gather_facts: no
+    tasks:
+      - name: 'import variables'
+        include_vars:
+          file: vault_vars.yml
+
+      - name: apply config
+        eos_config:
+          src: "{{ arista_config }}"
+          authorize: true
+          provider: '{{ arista_provider }}'

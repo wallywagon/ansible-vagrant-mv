@@ -1,0 +1,42 @@
+---
+- name: 'Changing hostname through NCLU'
+  nclu:
+    commands:
+      - add hostname "{{ inventory_hostname }}"
+    commit: True
+
+- name: 'retrieve configuration to make sure'
+  shell: grep {{ inventory_hostname }} /etc/hostname
+  register: validate
+
+- name: 'share the validation with user'
+  debug:
+    var: validate.stdout_lines
+
+- name: 'Set the MOTD'
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: 0644
+  become: True
+#
+#    - name: 'update the hosts file'
+#      template:
+#        src: templates/cumulus/hosts.j2
+#        dest: /etc/hosts
+#        owner: root
+#        group: root
+#        mode: 0644
+#      become: True
+
+#
+#    - name: 'reload services after interface configuration is updated'
+#      systemd:
+#        state: restarted
+#        daemon_reload: yes
+#        name: networking
+#      become: True
+
+

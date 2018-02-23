@@ -1,0 +1,4 @@
+# just the hostname :)
+# referenced in roles/system/templates/system.j2
+
+hostname: firewall

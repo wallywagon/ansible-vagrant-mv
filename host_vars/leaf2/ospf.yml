@@ -1,0 +1,13 @@
+ospf:
+  process_id: 1
+  router_id: 22.22.22.22
+  redistribute:
+    - protocol: connected
+      route_map: loopback
+  networks:
+    - prefix: 172.20.12.0/24
+      area: 0.0.0.0
+    - prefix: 10.1.12.0/24
+      area: 0.0.0.0
+    - prefix: 10.2.12.0/24
+      area: 0.0.0.0
